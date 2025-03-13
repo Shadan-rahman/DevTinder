@@ -1,31 +1,31 @@
 const express = require("express");
-
+const connectDB = require("./config/database");
 const app = express();
+const User = require("./models/user");
 
-app.get("/user/:UserId/:name/:password", (req, res) => {
-  res.send({ firstName: "Shadan", lastName: "Rahman" });
+app.post("/signup", async (req, res) => {
+  const user = new User({
+    firstName: "Shadan",
+    lastName: "Rahman",
+    emailId: "shadanrahman2@gmail.com",
+    password: "shadan123",
+  });
+
+  try {
+    await user.save();
+    res.send("User Added Successfully");
+  } catch (err) {
+    res.status(400).send("Error saving the user" + err.message);
+  }
 });
 
-// app.post("/user", (req, res) => {
-//   res.send("Data Saved Successfully in Database");
-// });
-
-// app.delete("/user", (req, res) => {
-//   res.send(" Data deleted Successfully");
-// });
-
-// app.use("/hello", (req, res) => {
-//   res.send("hello hello hello ");
-// });
-
-// app.use("/test", (req, res) => {
-//   res.send("hello from the test");
-// });
-
-// app.use("/", (req, res) => {
-//   res.send("hello from the server");
-// });
-
-app.listen(3000, () => {
-  console.log("Server is started runing successfully");
-});
+connectDB()
+  .then(() => {
+    console.log("Connect is succesfully established");
+    app.listen(3000, () => {
+      console.log("Server is started runing successfully");
+    });
+  })
+  .catch((err) => {
+    console.error("Connection is not established");
+  });
