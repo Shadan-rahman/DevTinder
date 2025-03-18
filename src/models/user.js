@@ -16,10 +16,20 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       required: true,
       unique: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid Email :" + value);
+        }
+      },
     },
     password: {
       type: String,
       required: true,
+      validate(value) {
+        if (!validator.isStrongPassword(value)) {
+          throw new Error("Enter a strong password :" + value);
+        }
+      },
     },
     age: {
       type: Number,
@@ -27,7 +37,7 @@ const userSchema = mongoose.Schema(
     },
     gender: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
       validate(value) {
         if (!["male", "female", "others"].includes(value)) {
